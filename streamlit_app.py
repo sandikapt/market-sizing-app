@@ -12,6 +12,14 @@ if not uploaded:
     st.stop()
 
 include_company = st.checkbox("Include company dimension")
+
+from make_template import make_template
+st.download_button(
+    "Download input template (.xlsx)",
+    make_template(include_company),
+    f"template_{'4d' if include_company else '3d'}.xlsx",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+)
 if st.button("Run pipeline", type="primary"):
     with st.spinner("Parsing & distributing..."):
         parsed = parse(uploaded, include_company)
