@@ -1,3 +1,5 @@
+from datetime import datetime, timezone, timedelta
+WIB = timezone(timedelta(hours=7))
 import streamlit as st
 import pandas as pd
 from io import BytesIO
@@ -7,19 +9,22 @@ st.set_page_config(page_title="Market Sizing", layout="wide")
 st.title("Market Sizing Pipeline")
 
 # --- Upload & parse (once) ---
+from make_template import make_template
+with st.expander("Need the input template?"):
+    tc = st.checkbox("Include company dimension (template)")
+    st.download_button(
+        "Download template",
+        make_template(tc),
+        f"template_{'4d' if tc else '3d'}_{datetime.now(WIB).strftime('%Y%m%d_%H%M')}.xlsx",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
 uploaded = st.file_uploader("Upload Excel input", type=["xlsx"])
 if not uploaded:
     st.stop()
 
 include_company = st.checkbox("Include company dimension")
 
-from make_template import make_template
-st.download_button(
-    "Download input template (.xlsx)",
-    make_template(include_company),
-    f"template_{'4d' if include_company else '3d'}.xlsx",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-)
 if st.button("Run pipeline", type="primary"):
     with st.spinner("Parsing & distributing..."):
         parsed = parse(uploaded, include_company)
@@ -118,4 +123,4 @@ if st.button("Recalculate", type="primary"):
 st.divider()
 buf = BytesIO()
 result.to_csv(buf, index=False)
-st.download_button("Download CSV", buf.getvalue(), "model_report.csv", "text/csv")
+st.download_button("Download CSV", buf.getvalue(), f"model_report_{datetime.now(WIB).strftime('%Y%m%d_%H%M')}.csv", "text/csv")
