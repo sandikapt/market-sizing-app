@@ -9,6 +9,11 @@ st.set_page_config(page_title="Market Sizing", layout="wide")
 st.title("Market Sizing Pipeline")
 
 # --- Upload & parse (once) ---
+from how_it_works import TEXT as HOW_TEXT
+
+with st.expander("How this works"):
+    st.markdown(HOW_TEXT)
+
 from make_template import make_template
 with st.expander("Need the input template?"):
     tc = st.checkbox("Include company dimension (template)")
@@ -18,11 +23,6 @@ with st.expander("Need the input template?"):
         f"template_{'4d' if tc else '3d'}_{datetime.now(WIB).strftime('%Y%m%d_%H%M')}.xlsx",
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
-
-from how_it_works import TEXT as HOW_TEXT
-
-with st.expander("How this works"):
-    st.markdown(HOW_TEXT)
 
 uploaded = st.file_uploader("Upload Excel input", type=["xlsx"])
 if not uploaded:
