@@ -19,6 +19,11 @@ with st.expander("Need the input template?"):
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
 
+from how_it_works import TEXT as HOW_TEXT
+
+with st.expander("How this works"):
+    st.markdown(HOW_TEXT)
+
 uploaded = st.file_uploader("Upload Excel input", type=["xlsx"])
 if not uploaded:
     st.stop()
