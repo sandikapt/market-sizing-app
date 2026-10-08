@@ -39,7 +39,7 @@ result = st.session_state['result']
 
 # --- Browse ---
 st.divider()
-st.subheader("Browse & Edit Weights")
+st.subheader("Review Breakdown")
 
 col1, col2 = st.columns(2)
 with col1:
@@ -67,7 +67,7 @@ for dim in [d.capitalize() for d in parsed['dims_list']]:
 
 # --- Edit weights ---
 st.divider()
-st.subheader(f"Edit weights for: {pick_l4}")
+st.subheader(f"Edit Weights — {pick_l4}")
 st.caption("Edit the weight column, then click Recalculate. Topline stays locked — changes redistribute within this product.")
 
 weights = get_weights_for_product(parsed, pick_l4, pick_idx)
