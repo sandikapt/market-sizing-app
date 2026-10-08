@@ -12,22 +12,18 @@ if not uploaded:
     st.stop()
 
 include_company = st.checkbox("Include company dimension")
-cache_key = f"{uploaded.name}_{include_company}"
-
-if st.session_state.get('cache_key') != cache_key:
-    with st.spinner("Parsing..."):
-        st.session_state['parsed'] = parse(uploaded, include_company)
-        st.session_state['cache_key'] = cache_key
-        st.session_state.pop('result', None)
-
-parsed = st.session_state['parsed']
-
-# --- Run base distribution ---
-if 'result' not in st.session_state:
-    with st.spinner("Distributing..."):
+if st.button("Run pipeline", type="primary"):
+    with st.spinner("Parsing & distributing..."):
+        parsed = parse(uploaded, include_company)
         result, log = distribute(parsed)
+        st.session_state['parsed'] = parsed
         st.session_state['result'] = result
         st.session_state['log'] = log
+
+if 'parsed' not in st.session_state:
+    st.stop()
+
+parsed = st.session_state['parsed']
 
 for line in st.session_state['log']:
     if "WARNING" in line:
